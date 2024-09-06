@@ -1,8 +1,9 @@
-import { IonApp, IonRouterOutlet, IonSplitPane, setupIonicReact } from '@ionic/react';
-import { IonReactRouter } from '@ionic/react-router';
+import React, { useState } from 'react';
 import { Redirect, Route } from 'react-router-dom';
-import Menu from './components/Menu';
+import { IonApp, IonRouterOutlet, setupIonicReact } from '@ionic/react';
+import { IonReactRouter } from '@ionic/react-router';
 import Page from './pages/Page';
+import IncidentDetail from './pages/IncidentDetail';
 
 /* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
@@ -20,37 +21,28 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-import '@ionic/react/css/palettes/dark.system.css';
-
 /* Theme variables */
 import './theme/variables.css';
 
 setupIonicReact();
 
 const App: React.FC = () => {
+  const [incidents, setIncidents] = useState<Incident[]>([]);
+
   return (
     <IonApp>
       <IonReactRouter>
-        <IonSplitPane contentId="main">
-          <Menu />
-          <IonRouterOutlet id="main">
-            <Route path="/" exact={true}>
-              <Redirect to="/folder/Inbox" />
-            </Route>
-            <Route path="/folder/:name" exact={true}>
-              <Page />
-            </Route>
-          </IonRouterOutlet>
-        </IonSplitPane>
+        <IonRouterOutlet>
+          <Route path="/" exact={true}>
+            <Redirect to="/page/Incidents" />
+          </Route>
+          <Route path="/page/:name" exact={true}>
+            <Page incidents={incidents} setIncidents={setIncidents} />
+          </Route>
+          <Route path="/incident/:id" exact={true}>
+            <IncidentDetail incidents={incidents} />
+          </Route>
+        </IonRouterOutlet>
       </IonReactRouter>
     </IonApp>
   );
